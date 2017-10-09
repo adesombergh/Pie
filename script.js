@@ -1,46 +1,69 @@
 $(document).ready(function(){
 
-  $("#btn").click(function(){
-    window.requestAnimationFrame(draw);
-  })
+	$("#btn").click( function(){ 
+		fillPie(2,270);
+	});
+	$("#btn2").click( function(){ 
+		unFillPie(2,270);
+	});
+
+	function unFillPie(duree,angleDebut){
+		var frameNb = duree * 25;
+		var t = frameNb;
+
+		var projecteur2 = setInterval(function(){
+			if (t < 0) return clearInterval(projecteur2);
+			frame(easeIn(t/frameNb),angleDebut);
+			t--;
+		},25);
+	}
+
+	function fillPie(duree,angleFinal){
+		var frameNb = duree * 25;
+		var t = 0;
+
+		var projecteur = setInterval(function(){
+			if (t/frameNb > 1) return clearInterval(projecteur);
+			frame(easeOut(t/frameNb),angleFinal);
+			t++;
+		},25);
+	}
+
+	function frame(avancement,angleFinal){
+		var angle = avancement*angleFinal;
+		drawPie(angle);
+	}
 
 
- var end = 1;
- var acceleration = 1;
+	var ctx = document.getElementById('myCanvas').getContext('2d');
+	var centerX = $('#myCanvas').width()/2;
+	var centerY = $('#myCanvas').height()/2;
+	var radius = $('#myCanvas').width()/2;
+	var depart = -90;
 
-function draw() {
-  if (end > 360) return false;
-  if (end > 180) {
-    acceleration--;
-  } else {
-    acceleration++;
-  }
-  console.log(end);
-  var ctx = document.getElementById('myCanvas').getContext('2d');
-  var pi = Math.PI;
-  var centerX = 150;
-  var centerY = 150;
-  var radius = 140;
-  var startAngle = -90;
-  var endAngle = startAngle + end;
-  ctx.clearRect(0,0,300,300);
-  ctx.beginPath();
 
-  ctx.arc(centerX, centerY, radius, toRad(startAngle), toRad(endAngle));
+	function toRad(angle){
+		return angle*Math.PI/180;
+	}
 
-  ctx.lineTo(centerX,centerY);
-  ctx.lineTo(centerX,centerY-radius);
+	function drawPie(endAngle){
+		endAngle -= 90;
+		ctx.clearRect(0,0,300,300);
+		ctx.beginPath();
+		ctx.arc(centerX, centerY, radius, toRad(depart), toRad(endAngle));
+		ctx.lineTo(centerX,centerY);
+		ctx.lineTo(centerX,centerY-radius);
+		ctx.stroke();
+		ctx.closePath()
+		ctx.fill();
 
-  ctx.stroke();
-  ctx.closePath()
-  ctx.fill();
-  end += acceleration;
-  window.requestAnimationFrame(draw);
-}
+	}
 
-function toRad(angle){
-  return angle*Math.PI/180;
-}
-
+	function easeOut(t) { 
+		return (--t)*t*t+1
+	}
+	function easeIn(t) { 
+		return (--t)*t*t+1
+	}
 
 });
