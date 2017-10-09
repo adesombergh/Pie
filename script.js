@@ -1,5 +1,12 @@
 $(document).ready(function(){
 
+	function Pie(ctx, value, animDuration, color) {
+	    this.ctx = ctx;
+	    this.value = value;
+	    this.animDuration = animDuration;
+	    this.color = color;
+	}
+
 	$("#btn").click( function(){ 
 		fillPie(2,270);
 	});
@@ -98,7 +105,7 @@ $(document).ready(function(){
 		return (--t)*t*t+1
 	}
 	function easeIn(t) { 
-		return (--t)*t*t+1
+		return t*t*t
 	}
 
 });

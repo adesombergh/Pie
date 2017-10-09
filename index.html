@@ -9,8 +9,10 @@
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		<style type="text/css" media="screen">
+			body {
+				background-color: #d1675a;
+			}
 			canvas {
-				border: 1px solid #000;
 			}
 
 		</style>
@@ -33,6 +35,15 @@
 		<!-- Bootstrap JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
- 		<script src="script.js"></script>
+ 		<script src="Pie.js"></script>
+ 		<script>
+ 			$(document).ready(function(){
+ 				myPie = new Pie("myCanvas",60,'#fff');
+ 				$('#btn').on('click', function(){ myPie.fillPie() } );
+
+ 				$('#btn2').on('click', function(){ myPie.unFillPie() } );
+ 				// $('#btn2').on('click', myPie.unFillPie() );
+ 			})
+ 		</script>
 	</body>
 </html>
