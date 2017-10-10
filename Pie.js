@@ -1,5 +1,6 @@
 function Pie(id, pourcent, color) {
 	var _this = this;
+	this.father = $('#'+id).closest('.father');
     this.ctx =  document.getElementById(id).getContext('2d');
     this.pourcent = pourcent;
     this.angle = pourcent * 360 / 100;
@@ -7,9 +8,11 @@ function Pie(id, pourcent, color) {
     this.color = color;
 	this.centerX = $('#'+id).width()/2;
 	this.centerY = $('#'+id).height()/2;
-	this.radius = $('#'+id).width()/2;
+	this.radius = $('#'+id).width()/2.2;
 	this.depart = -90;
+	this.filled = false;
     this.fillPie = function(){
+		this.filled = true;
   		var frameNb = this.animDuration * 25;
 		var t = 0;
 
@@ -22,6 +25,7 @@ function Pie(id, pourcent, color) {
 		},25);
     };
     this.unFillPie = function(){
+		this.filled = false;
 		var frameNb = _this.animDuration * 25;
 		var t = frameNb;
 		var projecteur2 = setInterval(function(){
@@ -52,7 +56,72 @@ function Pie(id, pourcent, color) {
     this.easeOut = function (t){
 		return (--t)*t*t+1
 	};
-    this.easeIn = function (t){
-		return t*t*t
+	this.inside = function (){
+		var top = _this.father.offset().top;
+		var bottom = top + _this.father.height();
+		var scrollTop = $(window).scrollTop()
+		var scrollBot = scrollTop + $(window).height()
+		return (scrollBot>bottom+20&&scrollTop<top-20)
+	}
+	$(window).scroll(function(){
+		if ( !_this.filled && _this.inside() ) {
+			_this.fillPie();
+		}
+		if ( _this.filled && !_this.inside() ) {
+			_this.unFillPie();
+		}
+	});
+	this.canGrow = true;
+	this.canShrink = false;
+	$("#"+id).mousemove(function(e){
+		x = e.pageX - $("#"+id).offset().left;
+		y = e.pageY - $("#"+id).offset().top;
+		if (_this.ctx.isPointInPath(x,y)&&_this.filled&&_this.canGrow) {
+			_this.canGrow=false;
+			_this.grow();
+		}
+		if (!_this.ctx.isPointInPath(x,y)&&_this.filled&&_this.canShrink) {
+			_this.canShrink=false;
+			_this.shrink();
+		}
+	});
+	$("#"+id).mouseleave(function(e){
+		if (_this.filled&&_this.canShrink) {
+			_this.canShrink=false;
+			_this.shrink();
+		}
+	});
+	this.grow = function () {
+  		var frameNb = 10;
+		var t = 0;
+		var projecteur3 = setInterval(function(){
+			if (t > frameNb) {
+				_this.canShrink=true;
+				return clearInterval(projecteur3);
+			}
+			var angle = _this.angle;
+			var w = $('#'+id).width();
+			_this.radius = w/(2.2 - _this.easeOut(t/frameNb)*.2);
+			_this.drawPie(angle);
+			t++;
+
+		 },25);
+	}
+	this.shrink = function () {
+  		var frameNb = 10;
+		var t = 0;
+
+		var projecteur4 = setInterval(function(){
+			if (t > frameNb) {
+				_this.canGrow=true;
+				return clearInterval(projecteur4);
+			}
+			var angle = _this.angle;
+			var w = $('#'+id).width();
+			_this.radius = w/(2 + _this.easeOut(t/frameNb)*.2);
+			_this.drawPie(angle);
+			t++;
+
+		 },25);
 	}
 }

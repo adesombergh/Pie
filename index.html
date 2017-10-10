@@ -14,6 +14,8 @@
 			}
 			canvas {
 			}
+			.father {
+			}
 
 		</style>
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -24,11 +26,13 @@
 		<![endif]-->
 	</head>
 	<body>
-		<div class="text-center">
-			<button type="button" class="btn btn-default" id="btn">Lancer</button>
-			<button type="button" class="btn btn-default" id="btn2">Lancer2</button>
+		<div style="height:1000px;">
+			
+		</div>
+		<div class="text-center father">
 			<canvas id="myCanvas" width="300" height="300"></canvas>
 		</div>
+		<div style="height:1000px;">
 
 		<!-- jQuery -->
 		<script src="//code.jquery.com/jquery.js"></script>
@@ -39,9 +43,6 @@
  		<script>
  			$(document).ready(function(){
  				myPie = new Pie("myCanvas",60,'#fff');
- 				$('#btn').on('click', function(){ myPie.fillPie() } );
-
- 				$('#btn2').on('click', function(){ myPie.unFillPie() } );
  				// $('#btn2').on('click', myPie.unFillPie() );
  			})
  		</script>
