@@ -5,7 +5,7 @@ function Pie(id, hue, saturation) {
     this.angle = this.pourcent * 360 / 100;
     this.animDuration = 1;
     this.color = 'hsl('+hue+','+saturation+'%,'+this.pourcent/2+'%)';
-    this.decalage = 20;
+    this.decalage = $('#'+id).width()/25;
 	this.centerX = ($('#'+id).width()-this.decalage)/2;
 	this.centerY = ($('#'+id).height()-this.decalage)/2;
 	this.radius = $('#'+id).width()/2.2-this.decalage;
@@ -43,9 +43,9 @@ function Pie(id, hue, saturation) {
 		this.ctx.clearRect(0,0,300,300);
 
 		this.ctx.beginPath();
-		this.ctx.arc(this.centerX+20, this.centerY+20, this.radius, this.toRad(this.depart), this.toRad(angle));
-		this.ctx.lineTo(this.centerX+20,this.centerY+20);
-		this.ctx.lineTo(this.centerX+20,this.centerY+20-this.radius);
+		this.ctx.arc(this.centerX+this.decalage, this.centerY+this.decalage, this.radius, this.toRad(this.depart), this.toRad(angle));
+		this.ctx.lineTo(this.centerX+this.decalage,this.centerY+this.decalage);
+		this.ctx.lineTo(this.centerX+this.decalage,this.centerY+this.decalage-this.radius);
 		this.ctx.strokeStyle = 'rgba(0,0,0,0)';
 		this.ctx.stroke();
 		this.ctx.closePath();
@@ -98,31 +98,31 @@ function Pie(id, hue, saturation) {
   		var frameNb = 10;
 		_this.projecteur3 = setInterval(function(){
 			_this.growth++;
+			var angle = _this.angle;
+			var w = $('#'+id).width();
+			_this.radius = w/(2.2 - _this.easeOut(_this.growth/frameNb)*.2)-_this.decalage;
+			var color = 'hsl('+hue+','+saturation+'%,'+(_this.pourcent/2+_this.growth)+'%)';
+			_this.drawPie(angle,color);
 			if (_this.growth == frameNb) {
 				_this.canShrink=true;
 				return clearInterval(_this.projecteur3);
 			}
-			var angle = _this.angle;
-			var w = $('#'+id).width();
-			_this.radius = (w-_this.decalage)/(2.2 - _this.easeOut(_this.growth/frameNb)*.2);
-			var color = 'hsl('+hue+','+saturation+'%,'+(_this.pourcent/2+_this.growth)+'%)';
-			_this.drawPie(angle,color);
 		 },25);
 	}
 	this.shrink = function () {
   		var frameNb = 10;
 		_this.projecteur4 = setInterval(function(){
 			_this.growth--;
+			var angle = _this.angle;
+			var w = $('#'+id).width();
+			_this.radius = w/(2.2 - _this.easeOut(_this.growth/frameNb)*.2)-_this.decalage;
+			console.log(_this.growth);
+			var color = 'hsl('+hue+','+saturation+'%,'+(_this.pourcent/2+_this.growth)+'%)';
+			_this.drawPie(angle,color);
 			if (_this.growth == 0) {
 				_this.canGrow=true;
 				return clearInterval(_this.projecteur4);
 			}
-			var angle = _this.angle;
-			var w = $('#'+id).width();
-			_this.radius = (w-_this.decalage)/(2.2 - _this.easeOut(_this.growth/frameNb)*.2);
-			var color = 'hsl('+hue+','+saturation+'%,'+(_this.pourcent/2+_this.growth)+'%)';
-			_this.drawPie(angle,color);
-
 		 },25);
 	}
 }
