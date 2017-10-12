@@ -1,10 +1,10 @@
-function Pie(id, color) {
+function Pie(id, hue, saturation) {
 	var _this = this;
     this.ctx =  document.getElementById(id).getContext('2d');
     this.pourcent = $('#'+id).data( "known" );
     this.angle = this.pourcent * 360 / 100;
     this.animDuration = 1;
-    this.color = color;
+    this.color = 'hsl('+hue+','+saturation+'%,'+this.pourcent/2+'%)';
     this.decalage = 20;
 	this.centerX = ($('#'+id).width()-this.decalage)/2;
 	this.centerY = ($('#'+id).height()-this.decalage)/2;
@@ -19,7 +19,7 @@ function Pie(id, color) {
 		var projecteur = setInterval(function(){
 			if (t/frameNb > 1) return clearInterval(projecteur);
 			var angle = _this.easeOut(t/frameNb) * _this.angle;
-			_this.drawPie(angle);
+			_this.drawPie(angle,_this.color);
 			t++;
 
 		},25);
@@ -34,11 +34,11 @@ function Pie(id, color) {
 				return clearInterval(projecteur2)
 			}
 			var angle = t/frameNb * _this.angle;
-			_this.drawPie(angle);
+			_this.drawPie(angle,_this.color);
 			t--;
 		},25);
     };
-    this.drawPie = function (angle) {
+    this.drawPie = function (angle,color) {
 		angle -= 90; //Car le début du camembert c'est à midi!
 		this.ctx.clearRect(0,0,300,300);
 
@@ -59,7 +59,7 @@ function Pie(id, color) {
 		this.ctx.strokeStyle = 'rgba(0,0,0,0)';
 		this.ctx.stroke();
 		this.ctx.closePath();
-		this.ctx.fillStyle = this.color;
+		this.ctx.fillStyle = color;
 		this.ctx.fill();
 
     };
@@ -105,7 +105,8 @@ function Pie(id, color) {
 			var angle = _this.angle;
 			var w = $('#'+id).width();
 			_this.radius = (w-_this.decalage)/(2.2 - _this.easeOut(_this.growth/frameNb)*.2);
-			_this.drawPie(angle);
+			var color = 'hsl('+hue+','+saturation+'%,'+(_this.pourcent/2+_this.growth)+'%)';
+			_this.drawPie(angle,color);
 		 },25);
 	}
 	this.shrink = function () {
@@ -119,7 +120,8 @@ function Pie(id, color) {
 			var angle = _this.angle;
 			var w = $('#'+id).width();
 			_this.radius = (w-_this.decalage)/(2.2 - _this.easeOut(_this.growth/frameNb)*.2);
-			_this.drawPie(angle);
+			var color = 'hsl('+hue+','+saturation+'%,'+(_this.pourcent/2+_this.growth)+'%)';
+			_this.drawPie(angle,color);
 
 		 },25);
 	}
