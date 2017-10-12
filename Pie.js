@@ -5,9 +5,10 @@ function Pie(id, color) {
     this.angle = this.pourcent * 360 / 100;
     this.animDuration = 1;
     this.color = color;
-	this.centerX = $('#'+id).width()/2;
-	this.centerY = $('#'+id).height()/2;
-	this.radius = $('#'+id).width()/2.2;
+    this.decalage = 20;
+	this.centerX = ($('#'+id).width()-this.decalage)/2;
+	this.centerY = ($('#'+id).height()-this.decalage)/2;
+	this.radius = $('#'+id).width()/2.2-this.decalage;
 	this.depart = -90;
 	this.filled = false;
     this.fillPie = function(){
@@ -40,6 +41,17 @@ function Pie(id, color) {
     this.drawPie = function (angle) {
 		angle -= 90; //Car le début du camembert c'est à midi!
 		this.ctx.clearRect(0,0,300,300);
+
+		this.ctx.beginPath();
+		this.ctx.arc(this.centerX+20, this.centerY+20, this.radius, this.toRad(this.depart), this.toRad(angle));
+		this.ctx.lineTo(this.centerX+20,this.centerY+20);
+		this.ctx.lineTo(this.centerX+20,this.centerY+20-this.radius);
+		this.ctx.strokeStyle = 'rgba(0,0,0,0)';
+		this.ctx.stroke();
+		this.ctx.closePath();
+		this.ctx.fillStyle = 'rgba(0,0,0,0.2)';
+		this.ctx.fill();
+
 		this.ctx.beginPath();
 		this.ctx.arc(this.centerX, this.centerY, this.radius, this.toRad(this.depart), this.toRad(angle));
 		this.ctx.lineTo(this.centerX,this.centerY);
@@ -49,6 +61,7 @@ function Pie(id, color) {
 		this.ctx.closePath();
 		this.ctx.fillStyle = this.color;
 		this.ctx.fill();
+
     };
     this.toRad = function (angle){
 		return angle*Math.PI/180;
@@ -71,41 +84,42 @@ function Pie(id, color) {
 		}
 	});
 	$("#"+id).mouseleave(function(e){
-		if (_this.filled&&_this.canShrink) {
-			_this.canShrink=false;
-			_this.shrink();
+		if (_this.filled) {
+			clearInterval(_this.projecteur3);
+			clearInterval(_this.projecteur4);
+			if(_this.growth > 0){
+				_this.canShrink=false;
+				_this.shrink();
+			}
 		}
 	});
+	this.growth = 0;
 	this.grow = function () {
   		var frameNb = 10;
-		var t = 0;
-		var projecteur3 = setInterval(function(){
-			if (t > frameNb) {
+		_this.projecteur3 = setInterval(function(){
+			_this.growth++;
+			if (_this.growth == frameNb) {
 				_this.canShrink=true;
-				return clearInterval(projecteur3);
+				return clearInterval(_this.projecteur3);
 			}
 			var angle = _this.angle;
 			var w = $('#'+id).width();
-			_this.radius = w/(2.2 - _this.easeOut(t/frameNb)*.2);
+			_this.radius = (w-_this.decalage)/(2.2 - _this.easeOut(_this.growth/frameNb)*.2);
 			_this.drawPie(angle);
-			t++;
-
 		 },25);
 	}
 	this.shrink = function () {
   		var frameNb = 10;
-		var t = 0;
-
-		var projecteur4 = setInterval(function(){
-			if (t > frameNb) {
+		_this.projecteur4 = setInterval(function(){
+			_this.growth--;
+			if (_this.growth == 0) {
 				_this.canGrow=true;
-				return clearInterval(projecteur4);
+				return clearInterval(_this.projecteur4);
 			}
 			var angle = _this.angle;
 			var w = $('#'+id).width();
-			_this.radius = w/(2 + _this.easeOut(t/frameNb)*.2);
+			_this.radius = (w-_this.decalage)/(2.2 - _this.easeOut(_this.growth/frameNb)*.2);
 			_this.drawPie(angle);
-			t++;
 
 		 },25);
 	}
