@@ -1,9 +1,8 @@
-function Pie(id, pourcent, color) {
+function Pie(id, color) {
 	var _this = this;
-	this.father = $('#'+id).closest('.father');
     this.ctx =  document.getElementById(id).getContext('2d');
-    this.pourcent = pourcent;
-    this.angle = pourcent * 360 / 100;
+    this.pourcent = $('#'+id).data( "known" );
+    this.angle = this.pourcent * 360 / 100;
     this.animDuration = 1;
     this.color = color;
 	this.centerX = $('#'+id).width()/2;
@@ -26,14 +25,14 @@ function Pie(id, pourcent, color) {
     };
     this.unFillPie = function(){
 		this.filled = false;
-		var frameNb = _this.animDuration * 25;
+		var frameNb = 15;
 		var t = frameNb;
 		var projecteur2 = setInterval(function(){
 			if (t == 0) {
 				_this.ctx.clearRect(0,0,300,300);
 				return clearInterval(projecteur2)
 			}
-			var angle = _this.easeOut(t/frameNb) * _this.angle;
+			var angle = t/frameNb * _this.angle;
 			_this.drawPie(angle);
 			t--;
 		},25);
@@ -45,6 +44,7 @@ function Pie(id, pourcent, color) {
 		this.ctx.arc(this.centerX, this.centerY, this.radius, this.toRad(this.depart), this.toRad(angle));
 		this.ctx.lineTo(this.centerX,this.centerY);
 		this.ctx.lineTo(this.centerX,this.centerY-this.radius);
+		this.ctx.strokeStyle = 'rgba(0,0,0,0)';
 		this.ctx.stroke();
 		this.ctx.closePath();
 		this.ctx.fillStyle = this.color;
@@ -56,21 +56,6 @@ function Pie(id, pourcent, color) {
     this.easeOut = function (t){
 		return (--t)*t*t+1
 	};
-	this.inside = function (){
-		var top = _this.father.offset().top;
-		var bottom = top + _this.father.height();
-		var scrollTop = $(window).scrollTop()
-		var scrollBot = scrollTop + $(window).height()
-		return (scrollBot>bottom+20&&scrollTop<top-20)
-	}
-	$(window).scroll(function(){
-		if ( !_this.filled && _this.inside() ) {
-			_this.fillPie();
-		}
-		if ( _this.filled && !_this.inside() ) {
-			_this.unFillPie();
-		}
-	});
 	this.canGrow = true;
 	this.canShrink = false;
 	$("#"+id).mousemove(function(e){

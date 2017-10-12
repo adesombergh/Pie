@@ -30,7 +30,7 @@
 			
 		</div>
 		<div class="text-center father">
-			<canvas id="myCanvas" width="300" height="300"></canvas>
+			<canvas id="myCanvas" width="300" height="300" data-known="56"></canvas>
 		</div>
 		<div style="height:1000px;">
 
@@ -42,8 +42,8 @@
  		<script src="Pie.js"></script>
  		<script>
  			$(document).ready(function(){
- 				myPie = new Pie("myCanvas",60,'#fff');
- 				// $('#btn2').on('click', myPie.unFillPie() );
+ 				myPie = new Pie("myCanvas",'#444');
+ 				myPie.fillPie();
  			})
  		</script>
 	</body>
