@@ -1,5 +1,6 @@
 function Pie(id, hue, saturation) {
 	var _this = this;
+
     this.ctx =  document.getElementById(id).getContext('2d');
     this.pourcent = $('#'+id).data( "known" );
     this.angle = this.pourcent * 360 / 100;
@@ -11,6 +12,11 @@ function Pie(id, hue, saturation) {
 	this.radius = $('#'+id).width()/2.2-this.decalage;
 	this.depart = -90;
 	this.filled = false;
+
+	$('#'+id).attr('title', 'Know: '+this.pourcent+'%');
+	$('#'+id).tooltip({
+	  	placement: 'bottom',
+	})
     this.fillPie = function(){
 		this.filled = true;
   		var frameNb = this.animDuration * 25;
@@ -61,7 +67,6 @@ function Pie(id, hue, saturation) {
 		this.ctx.closePath();
 		this.ctx.fillStyle = color;
 		this.ctx.fill();
-
     };
     this.toRad = function (angle){
 		return angle*Math.PI/180;
@@ -116,7 +121,6 @@ function Pie(id, hue, saturation) {
 			var angle = _this.angle;
 			var w = $('#'+id).width();
 			_this.radius = w/(2.2 - _this.easeOut(_this.growth/frameNb)*.2)-_this.decalage;
-			console.log(_this.growth);
 			var color = 'hsl('+hue+','+saturation+'%,'+(_this.pourcent/2+_this.growth)+'%)';
 			_this.drawPie(angle,color);
 			if (_this.growth == 0) {
