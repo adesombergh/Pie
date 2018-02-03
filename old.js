@@ -1,4 +1,4 @@
-function Pie(id, hue, saturation) {
+function oldPie(id, hue, saturation) {
 	var _this = this;
 
     this.ctx =  document.getElementById(id).getContext('2d');
@@ -14,9 +14,7 @@ function Pie(id, hue, saturation) {
 	this.filled = false;
 
 	$('#'+id).attr('title', 'Know: '+this.pourcent+'%');
-	$('#'+id).tooltip({
-	  	placement: 'bottom',
-	})
+
     this.fillPie = function(){
 		this.filled = true;
   		var frameNb = this.animDuration * 25;
